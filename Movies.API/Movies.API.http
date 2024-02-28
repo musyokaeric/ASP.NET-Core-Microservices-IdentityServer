@@ -1,0 +1,42 @@
+@Movies.API_HostAddress = https://localhost:6001
+
+GET {{Movies.API_HostAddress}}/api/movies
+
+###
+
+GET {{Movies.API_HostAddress}}/api/Movies/2
+
+###
+
+PUT {{Movies.API_HostAddress}}/api/movies/2
+Content-Type: application/json
+
+{
+  "id": 2,
+  "title": "The Edited Godfather",
+  "genre": "Crime",
+  "rating": "9.2",
+  "releaseDate": "1972-05-05T00:00:00",
+  "imageUrl": "images/src",
+  "owner": "alice"
+}
+
+###
+
+POST {{Movies.API_HostAddress}}/api/movies
+Content-Type: application/json
+
+{
+  "title": "The New Godfather",
+  "genre": "Crime",
+  "rating": "9.2",
+  "releaseDate": "1972-05-05T00:00:00",
+  "imageUrl": "images/src",
+  "owner": "alice"
+}
+
+###
+
+DELETE {{Movies.API_HostAddress}}/api/movies/9
+
+###
