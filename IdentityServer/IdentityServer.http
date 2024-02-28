@@ -1,0 +1,6 @@
+﻿@IdentityServer_HostAddress = https://localhost:6005
+
+GET {{IdentityServer_HostAddress}}/
+
+###
+GET {{IdentityServer_HostAddress}}/.well-known/openid-configuration
