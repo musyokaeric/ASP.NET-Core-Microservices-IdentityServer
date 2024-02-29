@@ -2,6 +2,11 @@ using IdentityServer;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddControllersWithViews();
+
+// IdentityServer4 (IS4) Registrations
+
+
 // IdentityServer
 builder.Services.AddIdentityServer()
     .AddInMemoryClients(Config.Clients) // Clients - Clients that need to access the API resources are defined here
@@ -16,9 +21,13 @@ builder.Services.AddIdentityServer()
 
 var app = builder.Build();
 
+app.UseStaticFiles();
+
 // IdentityServer
 app.UseIdentityServer();
 
-app.MapGet("/", () => "Hello World!");
+app.UseAuthorization();
+
+app.MapDefaultControllerRoute();
 
 app.Run();
