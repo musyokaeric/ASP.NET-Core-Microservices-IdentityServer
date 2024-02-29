@@ -1,11 +1,22 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using Movies.API.Data;
 var builder = WebApplication.CreateBuilder(args);
 
 // Use In-Memory Database for Entity Framework Core
 builder.Services.AddDbContext<MoviesAPIContext>(options =>
     options.UseInMemoryDatabase(builder.Configuration.GetConnectionString("MoviesAPIContext") ?? throw new InvalidOperationException("Connection string 'MoviesAPIContext' not found.")));
+
+
+// JWT Bearer Authentication
+builder.Services.AddAuthentication("Bearer").AddJwtBearer("Bearer", options =>
+{
+    options.Authority = "https://localhost:6005"; // OpenID Identity Server
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateAudience = false,
+    };
+});
 
 // Add services to the container.
 
@@ -37,6 +48,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 
