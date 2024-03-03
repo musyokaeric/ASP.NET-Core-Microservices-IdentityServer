@@ -1,4 +1,6 @@
 ﻿using IdentityModel.Client;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Movies.Client.Models;
 using Newtonsoft.Json;
 
@@ -7,12 +9,40 @@ namespace Movies.Client.ApiServices
     public class MovieApiService : IMovieApiService
     {
         private readonly IHttpClientFactory httpClientFactory;
+        private readonly IHttpContextAccessor httpContextAccessor;
         private HttpClient httpClient;
 
-        public MovieApiService(IHttpClientFactory httpClientFactory)
+        public MovieApiService(IHttpClientFactory httpClientFactory, IHttpContextAccessor httpContextAccessor)
         {
             this.httpClientFactory = httpClientFactory;
+            this.httpContextAccessor = httpContextAccessor;
             httpClient = httpClientFactory.CreateClient("MovieAPIClient");
+        }
+
+        public async Task<UserInfoViewModel> GetUserInfo()
+        {
+            var client = httpClientFactory.CreateClient("ISClient");
+
+            var metadataResponse = await client.GetDiscoveryDocumentAsync();
+            if (metadataResponse.IsError) throw new HttpRequestException("Something went wrong while requesting the access token");
+
+            var accessToken = await httpContextAccessor.HttpContext.GetTokenAsync(OpenIdConnectParameterNames.AccessToken);
+
+            var userInfoResponse = await client.GetUserInfoAsync(
+                new UserInfoRequest
+                {
+                    Address = metadataResponse.UserInfoEndpoint,
+                    Token = accessToken
+                });
+            if (userInfoResponse.IsError) throw new HttpRequestException("Something went wrong while getting user info");
+
+            var userInfoDictionary = new Dictionary<string, string>();
+            foreach (var claim in userInfoResponse.Claims)
+            {
+                userInfoDictionary.Add(claim.Type, claim.Value);
+            }
+
+            return new UserInfoViewModel(userInfoDictionary);
         }
 
         public async Task<IEnumerable<Movie>> GetMovies()
