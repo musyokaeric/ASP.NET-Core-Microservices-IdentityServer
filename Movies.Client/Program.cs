@@ -30,6 +30,8 @@ builder.Services.AddAuthentication(options =>
 
         options.Scope.Add("openid");
         options.Scope.Add("profile");
+        options.Scope.Add("address");
+        options.Scope.Add("email");
         options.Scope.Add("movieAPI"); // added API scope
 
         options.SaveTokens = true;

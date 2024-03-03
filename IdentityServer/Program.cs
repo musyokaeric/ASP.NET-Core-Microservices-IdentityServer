@@ -1,4 +1,5 @@
 using IdentityServer;
+using IdentityServerHost.Quickstart.UI;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,7 +14,7 @@ builder.Services.AddIdentityServer()
     .AddInMemoryIdentityResources(Config.IdentityResources) // IdentityResource - includes user information (user id, email etc.) and can assign claim types linked to them
     // .AddInMemoryApiResources(Config.ApiResources) // ApiResource - resource (data source, web service etc.) in your system that you want to protect
     .AddInMemoryApiScopes(Config.ApiScopes) // ApiScope - represents what the client application is allowed to do
-    .AddTestUsers(Config.TestUsers) // TestUser - users that will use the client application needed to access the APIs
+    .AddTestUsers(TestUsers.Users) // TestUser - users that will use the client application needed to access the APIs
     .AddDeveloperSigningCredential(); // Creates temporary key material at program startup
 
 // To confirm it's working, open the link below on a browser or postman:
