@@ -58,7 +58,7 @@ builder.Services.AddTransient<AuthenticationDelegatingHandler>();
 // HttpClient configuration used for accessing the API
 builder.Services.AddHttpClient("MovieAPIClient", client =>
 {
-    client.BaseAddress = new Uri("https://localhost:6001/");
+    client.BaseAddress = new Uri("https://localhost:6010/"); // Passes through the API gateway when retrieving data
     client.DefaultRequestHeaders.Clear();
     client.DefaultRequestHeaders.Add(HeaderNames.Accept, "application/json");
 }).AddHttpMessageHandler<AuthenticationDelegatingHandler>();
