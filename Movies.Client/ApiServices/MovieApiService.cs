@@ -27,24 +27,52 @@ namespace Movies.Client.ApiServices
             return movieList;
         }
 
-        public Task<Movie> GetMovie(string id)
+        public async Task<Movie> GetMovie(string id)
         {
-            throw new NotImplementedException();
+            var request = new HttpRequestMessage(HttpMethod.Get, $"/api/movies/{id}");
+
+            var response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
+            response.EnsureSuccessStatusCode();
+
+            var content = await response.Content.ReadAsStringAsync();
+            Movie movie = JsonConvert.DeserializeObject<Movie>(content);
+            return movie;
         }
 
-        public Task<Movie> CreateMovie(Movie movie)
+        public async Task<Movie> CreateMovie(Movie movie)
         {
-            throw new NotImplementedException();
+            var request = new HttpRequestMessage(HttpMethod.Post, "/api/movies/")
+            {
+                Content = JsonContent.Create(movie)
+            };
+
+            var response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
+            response.EnsureSuccessStatusCode();
+
+            var content = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<Movie>(content);
         }
 
-        public Task<Movie> UpdateMovie(Movie movie)
+        public async Task<Movie> UpdateMovie(Movie movie)
         {
-            throw new NotImplementedException();
+            var request = new HttpRequestMessage(HttpMethod.Put, $"/api/movies/{movie.Id}")
+            {
+                Content = JsonContent.Create(movie)
+            };
+
+            var response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
+            response.EnsureSuccessStatusCode();
+
+            var content = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<Movie>(content);
         }
 
-        public Task DeleteMovie(int id)
+        public async Task DeleteMovie(int id)
         {
-            throw new NotImplementedException();
+            var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/movies/{id}");
+
+            var response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
+            response.EnsureSuccessStatusCode();
         }
     }
 }
