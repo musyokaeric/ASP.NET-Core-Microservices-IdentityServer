@@ -1,6 +1,9 @@
-﻿using IdentityModel.Client;
+﻿using IdentityModel;
+using IdentityModel.Client;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.Net.Http.Headers;
 using Movies.Client.ApiServices;
 using Movies.Client.HttpHandlers;
@@ -32,11 +35,21 @@ builder.Services.AddAuthentication(options =>
         options.Scope.Add("profile");
         options.Scope.Add("address");
         options.Scope.Add("email");
+        options.Scope.Add("roles");
         options.Scope.Add("movieAPI"); // added API scope
+
+        options.ClaimActions.MapUniqueJsonKey("role", "role");
 
         options.SaveTokens = true;
 
         options.GetClaimsFromUserInfoEndpoint = true;
+
+        // Validates the token if the following claim types exist
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            NameClaimType = JwtClaimTypes.GivenName,
+            RoleClaimType = JwtClaimTypes.Role
+        };
     });
 
 // Authentication delegation handler - retieves token from IS4

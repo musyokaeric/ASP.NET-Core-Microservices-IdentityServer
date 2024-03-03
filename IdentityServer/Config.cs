@@ -47,7 +47,8 @@ namespace IdentityServer
                         IdentityServerConstants.StandardScopes.Profile,
                         IdentityServerConstants.StandardScopes.Address,
                         IdentityServerConstants.StandardScopes.Email,
-                        "movieAPI" // added the API scope
+                        "movieAPI", // added the API scope
+                        "roles"
                     }
                 }
             };
@@ -62,16 +63,21 @@ namespace IdentityServer
             new ApiResource[] { };
 
         public static IEnumerable<IdentityResource> IdentityResources =>
-            new IdentityResource[] 
+            new IdentityResource[]
             {
                 new IdentityResources.OpenId(),
                 new IdentityResources.Profile(),
                 new IdentityResources.Address(),
                 new IdentityResources.Email(),
+                new IdentityResource(
+                    "roles",
+                    "Your role(s)",
+                    new List<string>{ "role" }
+                    )
             };
 
         public static List<TestUser> TestUsers =>
-            new List<TestUser> 
+            new List<TestUser>
             {
                 new TestUser
                 {
