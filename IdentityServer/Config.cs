@@ -11,18 +11,23 @@ namespace IdentityServer
         public static IEnumerable<Client> Clients =>
             new Client[]
             {
-                new Client // for the API web application
-                {
-                    ClientId = "movieClient",
-                    AllowedGrantTypes = GrantTypes.ClientCredentials,
-                    ClientSecrets = { new Secret("secret".Sha256()) },
-                    AllowedScopes = { "movieAPI" }
-                },
+                // **************************************************************************************
+                // Not needed since the scope and be accessed within the MVC web app's client scope below
+                // **************************************************************************************
+
+                //new Client // for the API web application
+                //{
+                //    ClientId = "movieClient",
+                //    AllowedGrantTypes = GrantTypes.ClientCredentials,
+                //    ClientSecrets = { new Secret("secret".Sha256()) },
+                //    AllowedScopes = { "movieAPI" }
+                //},
                 new Client // for the MVC web application
                 {
                     ClientId = "movies_mvc_client",
                     ClientName = "Movies MVC Web App",
-                    AllowedGrantTypes = GrantTypes.Code,
+                    AllowedGrantTypes = GrantTypes.Hybrid, // hybrid authentication flow
+                    RequirePkce = false,
                     AllowRememberConsent = false,
                     RedirectUris = new List<string>
                     {
@@ -39,7 +44,8 @@ namespace IdentityServer
                     AllowedScopes = new List<string>
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
-                        IdentityServerConstants.StandardScopes.Profile
+                        IdentityServerConstants.StandardScopes.Profile,
+                        "movieAPI" // added the API scope
                     }
                 }
             };

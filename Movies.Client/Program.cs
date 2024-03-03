@@ -26,10 +26,11 @@ builder.Services.AddAuthentication(options =>
 
         options.ClientId = "movies_mvc_client";
         options.ClientSecret = "secret";
-        options.ResponseType = "code";
+        options.ResponseType = "code id_token"; // hyprid authentication flow
 
         options.Scope.Add("openid");
         options.Scope.Add("profile");
+        options.Scope.Add("movieAPI"); // added API scope
 
         options.SaveTokens = true;
 
@@ -56,14 +57,24 @@ builder.Services.AddHttpClient("ISClient", client =>
     client.DefaultRequestHeaders.Add(HeaderNames.Accept, "application/json");
 });
 
+
+// *************************************************************
+// Commented because we are no longer getting the token from IS4
+// *************************************************************
+
 // Client credentials registered on IS4
-builder.Services.AddSingleton(new ClientCredentialsTokenRequest
-{
-    Address = "https://localhost:6005/connect/token",
-    ClientId = "movieClient",
-    ClientSecret = "secret",
-    Scope = "movieAPI"
-});
+//builder.Services.AddSingleton(new ClientCredentialsTokenRequest
+//{
+//    Address = "https://localhost:6005/connect/token",
+//    ClientId = "movieClient",
+//    ClientSecret = "secret",
+//    Scope = "movieAPI"
+//});
+
+
+// HttpContext accessor - uses the existing http request, therefore we do not need
+// to prepare another request for IS4
+builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
 
